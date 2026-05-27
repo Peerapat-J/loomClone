@@ -69,11 +69,13 @@ M00 establishes the first launchable app foundation:
 
 The build script stages a local `.app` bundle in `dist/` and launches that bundle so app metadata, icon, and `LSUIElement` menubar behavior are applied.
 
-Open the project in Xcode by opening `LoomClone.xcworkspace` from Finder, or run:
+Open the project in Xcode by opening `Package.swift` inside this repo, or run:
 
 ```sh
-xed LoomClone.xcworkspace
+xed Package.swift
 ```
+
+Do not open the parent `New project` folder in Xcode. That only opens the workspace folder around the repo and does not load the Swift package correctly.
 
 ## Privacy Posture
 

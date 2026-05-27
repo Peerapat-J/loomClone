@@ -58,6 +58,7 @@ Minimum supported version: macOS 14.0. See [Decision 0001](docs/decisions/0001-m
 M00 establishes the first launchable app foundation:
 
 - SwiftPM executable product: `LoomClone`
+- Xcode workspace: `LoomClone.xcworkspace`
 - SwiftUI app entry point
 - AppKit application delegate for menubar-style lifecycle behavior
 - menubar-first app surface using `MenuBarExtra`
@@ -67,6 +68,12 @@ M00 establishes the first launchable app foundation:
 - initial source folders documented in [Project Structure](docs/project-structure.md)
 
 The build script stages a local `.app` bundle in `dist/` and launches that bundle so app metadata, icon, and `LSUIElement` menubar behavior are applied.
+
+Open the project in Xcode by opening `LoomClone.xcworkspace` from Finder, or run:
+
+```sh
+xed LoomClone.xcworkspace
+```
 
 ## Privacy Posture
 

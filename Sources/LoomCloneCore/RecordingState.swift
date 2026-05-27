@@ -1,13 +1,13 @@
-enum RecordingState: String, CaseIterable, Identifiable {
+public enum RecordingState: String, CaseIterable, Identifiable {
     case idle
     case recording
     case paused
 
-    var id: String {
+    public var id: String {
         rawValue
     }
 
-    var displayName: String {
+    public var displayName: String {
         switch self {
         case .idle:
             "Idle"

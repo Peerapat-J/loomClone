@@ -1,13 +1,13 @@
-enum AppPermission: String, CaseIterable, Identifiable {
+public enum AppPermission: String, CaseIterable, Identifiable {
     case screenRecording
     case camera
     case microphone
 
-    var id: String {
+    public var id: String {
         rawValue
     }
 
-    var displayName: String {
+    public var displayName: String {
         switch self {
         case .screenRecording:
             "Screen Recording"
@@ -19,7 +19,7 @@ enum AppPermission: String, CaseIterable, Identifiable {
     }
 }
 
-enum PermissionState: String {
+public enum PermissionState: String {
     case unknown
     case notDetermined
     case granted

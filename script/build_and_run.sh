@@ -4,7 +4,9 @@ set -euo pipefail
 MODE="${1:-run}"
 APP_NAME="LoomClone"
 BUNDLE_ID="dev.peerapat.loomclone"
-MIN_SYSTEM_VERSION="14.0"
+MIN_SYSTEM_VERSION="15.0"
+SWIFT_BUILD_FLAGS=(--arch arm64)
+export MACOSX_DEPLOYMENT_TARGET="${MACOSX_DEPLOYMENT_TARGET:-$MIN_SYSTEM_VERSION}"
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 DIST_DIR="$ROOT_DIR/dist"
@@ -22,18 +24,19 @@ stop_existing_app() {
 }
 
 build_package() {
-  swift build
+  swift build "${SWIFT_BUILD_FLAGS[@]}"
 }
 
 stage_app_bundle() {
   local build_dir
-  build_dir="$(swift build --show-bin-path)"
+  build_dir="$(swift build "${SWIFT_BUILD_FLAGS[@]}" --show-bin-path)"
 
   /bin/rm -rf "$APP_BUNDLE"
   /bin/mkdir -p "$APP_MACOS" "$APP_RESOURCES"
 
   /bin/cp "$build_dir/$APP_NAME" "$APP_BINARY"
   /bin/chmod +x "$APP_BINARY"
+  verify_apple_silicon_binary
 
   if compgen -G "$build_dir/*.bundle" >/dev/null; then
     /bin/cp -R "$build_dir"/*.bundle "$APP_RESOURCES/"
@@ -60,12 +63,21 @@ stage_app_bundle() {
   /usr/bin/plutil -insert NSMicrophoneUsageDescription -string "LoomClone uses the microphone only when microphone recording is enabled." "$INFO_PLIST"
 }
 
+verify_apple_silicon_binary() {
+  local archs
+  archs="$(/usr/bin/lipo -archs "$APP_BINARY")"
+  if [[ "$archs" != "arm64" ]]; then
+    echo "expected $APP_NAME to be arm64 only, got: $archs" >&2
+    exit 1
+  fi
+}
+
 open_app() {
   /usr/bin/open -n "$APP_BUNDLE"
 }
 
 usage() {
-  echo "usage: $0 [run|--debug|debug|--logs|logs|--telemetry|telemetry|--verify|verify]" >&2
+  echo "usage: $0 [run|--debug|debug|--logs|logs|--telemetry|telemetry|--verify|verify|--package|package]" >&2
 }
 
 stop_existing_app
@@ -75,6 +87,9 @@ stage_app_bundle
 case "$MODE" in
   run)
     open_app
+    ;;
+  --package|package)
+    echo "Packaged $APP_BUNDLE"
     ;;
   --debug|debug)
     lldb -- "$APP_BINARY"

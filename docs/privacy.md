@@ -7,7 +7,7 @@ LoomClone is local-first for the MVP.
 - Recordings are saved on the local Mac.
 - The app does not upload recordings.
 - The app does not require an account.
-- The app does not include analytics.
+- The app does not include product analytics.
 - The app does not depend on cloud services.
 - The app should continue to work without an internet connection.
 
@@ -23,4 +23,4 @@ System audio recording is not part of the first MVP.
 
 ## Future Changes
 
-Any future network, cloud upload, analytics, team workspace, or sharing feature should be treated as a separate opt-in product decision. It should not be added as an invisible side effect of the local recorder.
+Any future network, cloud upload, product analytics, team workspace, or sharing feature should be treated as a separate opt-in product decision. It should not be added as an invisible side effect of the local recorder.

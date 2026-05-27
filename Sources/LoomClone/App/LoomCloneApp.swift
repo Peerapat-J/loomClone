@@ -1,3 +1,4 @@
+import LoomCloneCore
 import SwiftUI
 
 @main

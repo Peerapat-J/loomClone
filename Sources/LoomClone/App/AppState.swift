@@ -1,5 +1,6 @@
 import Combine
 import Foundation
+import LoomCloneCore
 
 @MainActor
 final class AppState: ObservableObject {

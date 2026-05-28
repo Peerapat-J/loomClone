@@ -30,8 +30,19 @@ jobs:
           swift --version
           xcodebuild -version
 
-      - name: Unit tests
-        run: swift test --arch arm64
+      - name: Xcode unit tests
+        run: |
+          xcodebuild \
+            -project LoomClone.xcodeproj \
+            -scheme LoomClone \
+            -configuration Debug \
+            -destination 'platform=macOS,arch=arm64' \
+            -derivedDataPath /tmp/loomclone-release-preview-test-derived \
+            ARCHS=arm64 \
+            ONLY_ACTIVE_ARCH=YES \
+            MACOSX_DEPLOYMENT_TARGET=15.0 \
+            CODE_SIGNING_ALLOWED=NO \
+            test
 
       - name: Package app bundle
         run: ./script/build_and_run.sh --package
@@ -67,7 +78,7 @@ jobs:
             echo ""
             echo "### Checks"
             echo ""
-            echo "- Unit tests: swift test --arch arm64"
-            echo "- App bundle packaging"
+            echo "- Xcode unit tests for macOS arm64"
+            echo "- Xcode app bundle packaging"
             echo "- App binary architecture and minimum macOS verification"
           } >> "$GITHUB_STEP_SUMMARY"

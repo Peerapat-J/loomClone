@@ -8,12 +8,12 @@ CI runs on GitHub-hosted `macos-15` runners and builds Apple Silicon artifacts o
 
 Checks:
 
-- validate the Swift package graph
 - run shell syntax checks for project scripts
 - run `swift-format lint` when the runner has `swift-format`
-- run unit tests with `swift test --arch arm64`
-- build with SwiftPM using `swift build --arch arm64`
-- build the Xcode package scheme for macOS arm64
+- run unit tests with `xcodebuild -project LoomClone.xcodeproj`
+- build Debug with `xcodebuild -project LoomClone.xcodeproj`
+- build Release with `xcodebuild -project LoomClone.xcodeproj`
+- run `xcodebuild analyze`
 - package the local `.app` bundle without launching it
 - verify the packaged app binary is `arm64`
 - verify the packaged app minimum macOS version is `15.0`

@@ -36,7 +36,7 @@ Typical use cases:
 - Local first: recordings stay on the machine.
 - No cloud dependency: the app should work offline.
 - No account system in MVP.
-- No analytics in MVP.
+- No product analytics in MVP.
 - Minimal, native macOS UI.
 - Menubar-first workflow.
 - Reliability before advanced editing.
@@ -49,7 +49,46 @@ Typical use cases:
 - AVFoundation for camera, microphone, file writing, and export.
 - Core Image or Metal later if blur/compositing needs more control.
 
-Initial target can be macOS 14+ to keep the first implementation simpler. This can be lowered later if there is a clear reason.
+The initial project is a SwiftPM-based macOS app package so it can be built from the command line and opened in Xcode without committing generated Xcode user files.
+
+Minimum supported version: macOS 15.0 on Apple Silicon. See [Decision 0001](docs/decisions/0001-minimum-macos-version.md).
+
+## Current App Foundation
+
+M00 establishes the first launchable app foundation:
+
+- SwiftPM executable product: `LoomClone`
+- SwiftPM core target for testable foundation models: `LoomCloneCore`
+- SwiftUI app entry point
+- AppKit application delegate for menubar-style lifecycle behavior
+- menubar-first app surface using `MenuBarExtra`
+- placeholder app icon generation for the local app bundle
+- project-local build and run script: `script/build_and_run.sh`
+- Codex Run action: `.codex/environments/environment.toml`
+- GitHub Actions CI/CD workflows documented in [CI/CD](docs/ci-cd.md)
+- initial source folders documented in [Project Structure](docs/project-structure.md)
+
+The build script stages a local `.app` bundle in `dist/` and launches that bundle so app metadata, icon, and `LSUIElement` menubar behavior are applied.
+
+Open the project in Xcode by opening `Package.swift` inside this repo, or run:
+
+```sh
+xed Package.swift
+```
+
+Do not open the parent `New project` folder in Xcode. That only opens the workspace folder around the repo and does not load the Swift package correctly.
+
+## Privacy Posture
+
+The MVP is local-only. Recordings stay on the Mac, the app does not upload files, and the MVP has no account system, product analytics, or cloud dependency.
+
+The planned permissions are:
+
+- Screen Recording for display capture
+- Microphone only when microphone recording is enabled
+- Camera only when webcam overlay is enabled
+
+See [Privacy Notes](docs/privacy.md).
 
 ## MVP Scope
 
@@ -181,7 +220,7 @@ Why not include it immediately:
 
 ## Milestones
 
-### Milestone 0: Repository and Project Foundation
+### Milestone 00: Repository and Project Foundation
 
 Goal: create the basic app foundation and keep the product direction clear.
 

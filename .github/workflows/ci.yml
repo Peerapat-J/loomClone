@@ -1,0 +1,79 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - main
+      - dev
+  push:
+    branches:
+      - main
+      - dev
+      - "PJ/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  MACOSX_DEPLOYMENT_TARGET: "15.0"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality-build-test:
+    name: Quality, Build, and Test
+    runs-on: macos-15
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
+
+      - name: Tool versions
+        run: |
+          sw_vers
+          swift --version
+          xcodebuild -version
+
+      - name: Validate package graph
+        run: swift package describe >/tmp/loomclone-package.json
+
+      - name: Check shell scripts
+        run: bash -n script/build_and_run.sh
+
+      - name: Swift format lint
+        run: |
+          if command -v swift-format >/dev/null 2>&1; then
+            swift-format lint --recursive Package.swift Sources Tests
+          else
+            echo "swift-format is not installed on this runner; skipping lint."
+          fi
+
+      - name: Unit tests
+        run: swift test --arch arm64
+
+      - name: SwiftPM build
+        run: swift build --arch arm64
+
+      - name: Xcode package build
+        run: |
+          xcodebuild \
+            -scheme LoomClone \
+            -destination 'platform=macOS,arch=arm64' \
+            ARCHS=arm64 \
+            MACOSX_DEPLOYMENT_TARGET=15.0 \
+            ONLY_ACTIVE_ARCH=YES \
+            build
+
+      - name: Package app bundle
+        run: ./script/build_and_run.sh --package
+
+      - name: Verify packaged app
+        run: |
+          test "$(lipo -archs dist/LoomClone.app/Contents/MacOS/LoomClone)" = "arm64"
+          test "$(plutil -extract LSMinimumSystemVersion raw -o - dist/LoomClone.app/Contents/Info.plist)" = "15.0"

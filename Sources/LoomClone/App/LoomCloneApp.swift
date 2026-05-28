@@ -7,13 +7,13 @@ struct LoomCloneApp: App {
     @StateObject private var appState = AppState()
 
     var body: some Scene {
-        MenuBarExtra(AppConfiguration.appName, systemImage: "record.circle") {
+        MenuBarExtra {
             MenuBarContentView(appState: appState)
+        } label: {
+            Label(appState.menuBarTitle, systemImage: appState.menuBarSystemImage)
         }
         .menuBarExtraStyle(.menu)
 
-        Settings {
-            SettingsView(appState: appState)
-        }
+        Settings {}
     }
 }

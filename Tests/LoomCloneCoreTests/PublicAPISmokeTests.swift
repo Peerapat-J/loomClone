@@ -15,5 +15,9 @@ final class PublicAPISmokeTests: XCTestCase {
         )
         _ = ExportSettings()
         _ = ExportSettings(preferredFormat: .mp4, shouldRevealAfterExport: false)
+        _ = RecordingDuration(seconds: 0)
+        _ = SaveLocationSettings()
+        _ = SaveLocationSettings(customFolderPath: "/tmp")
+        _ = SaveLocationPreferenceStore()
     }
 }

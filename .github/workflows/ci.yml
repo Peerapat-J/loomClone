@@ -77,3 +77,27 @@ jobs:
         run: |
           test "$(lipo -archs dist/LoomClone.app/Contents/MacOS/LoomClone)" = "arm64"
           test "$(plutil -extract LSMinimumSystemVersion raw -o - dist/LoomClone.app/Contents/Info.plist)" = "15.0"
+
+      - name: Write CI summary
+        if: always()
+        run: |
+          {
+            echo "## CI Summary"
+            echo ""
+            echo "- Workflow: $GITHUB_WORKFLOW"
+            echo "- Ref: $GITHUB_REF_NAME"
+            echo "- Commit: $GITHUB_SHA"
+            echo "- Runner: macos-15"
+            echo "- Target: macOS 15.0, arm64"
+            echo "- App bundle: dist/LoomClone.app"
+            echo ""
+            echo "### Checks"
+            echo ""
+            echo "- Package graph validation"
+            echo "- Shell script syntax"
+            echo "- Swift format lint when swift-format is installed"
+            echo "- Unit tests: swift test --arch arm64"
+            echo "- SwiftPM build: swift build --arch arm64"
+            echo "- Xcode package build for macOS arm64"
+            echo "- App bundle packaging and metadata verification"
+          } >> "$GITHUB_STEP_SUMMARY"

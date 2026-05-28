@@ -17,6 +17,7 @@ Checks:
 - package the local `.app` bundle without launching it
 - verify the packaged app binary is `arm64`
 - verify the packaged app minimum macOS version is `15.0`
+- write a GitHub Actions job summary with the validated target, commit, and checks
 
 ## Release Preview
 
@@ -24,8 +25,10 @@ The release-preview workflow builds a zipped `.app` artifact for manual testing.
 
 The artifact is unsigned and not notarized. That is acceptable for M00 and personal testing, but proper signing and notarization should be handled before any public release.
 
+Release preview also writes a GitHub Actions job summary with the artifact name, retention window, target platform, and validation checks.
+
 ## Analytics
 
 The app itself has no product analytics in the MVP.
 
-GitHub Actions provides workflow run history, logs, durations, and artifacts. Those are CI/CD observability signals only; they are not app telemetry.
+GitHub Actions provides workflow run history, logs, durations, artifacts, and per-run summaries. Those are CI/CD observability signals only; they are not app telemetry.

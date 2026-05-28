@@ -27,10 +27,31 @@ guard CommandLine.arguments.count == 2 else {
 let outputURL = URL(fileURLWithPath: CommandLine.arguments[1], isDirectory: true)
 try FileManager.default.createDirectory(at: outputURL, withIntermediateDirectories: true)
 
-func drawIcon(size: CGFloat) -> NSImage {
-    let image = NSImage(size: NSSize(width: size, height: size))
-    image.lockFocus()
-    defer { image.unlockFocus() }
+func drawIcon(pixels: Int) -> Data? {
+    let size = CGFloat(pixels)
+    guard
+        let bitmap = NSBitmapImageRep(
+            bitmapDataPlanes: nil,
+            pixelsWide: pixels,
+            pixelsHigh: pixels,
+            bitsPerSample: 8,
+            samplesPerPixel: 4,
+            hasAlpha: true,
+            isPlanar: false,
+            colorSpaceName: .deviceRGB,
+            bytesPerRow: 0,
+            bitsPerPixel: 0
+        ),
+        let context = NSGraphicsContext(bitmapImageRep: bitmap)
+    else {
+        return nil
+    }
+
+    bitmap.size = NSSize(width: size, height: size)
+
+    NSGraphicsContext.saveGraphicsState()
+    NSGraphicsContext.current = context
+    defer { NSGraphicsContext.restoreGraphicsState() }
 
     let bounds = NSRect(x: 0, y: 0, width: size, height: size)
     NSColor(calibratedRed: 0.082, green: 0.125, blue: 0.169, alpha: 1).setFill()
@@ -53,17 +74,12 @@ func drawIcon(size: CGFloat) -> NSImage {
     )
     NSBezierPath(roundedRect: cameraBody, xRadius: size * 0.035, yRadius: size * 0.035).fill()
 
-    return image
+    return bitmap.representation(using: .png, properties: [:])
 }
 
 for spec in specs {
     autoreleasepool {
-        let image = drawIcon(size: CGFloat(spec.pixels))
-        guard
-            let tiff = image.tiffRepresentation,
-            let bitmap = NSBitmapImageRep(data: tiff),
-            let png = bitmap.representation(using: .png, properties: [:])
-        else {
+        guard let png = drawIcon(pixels: spec.pixels) else {
             FileHandle.standardError.write(Data("failed to render \(spec.filename)\n".utf8))
             exit(1)
         }

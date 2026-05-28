@@ -49,34 +49,35 @@ Typical use cases:
 - AVFoundation for camera, microphone, file writing, and export.
 - Core Image or Metal later if blur/compositing needs more control.
 
-The initial project is a SwiftPM-based macOS app package so it can be built from the command line and opened in Xcode without committing generated Xcode user files.
+The project is a native Xcode macOS app project so it opens directly in Xcode and uses the same build path locally and in CI.
 
 Minimum supported version: macOS 15.0 on Apple Silicon. See [Decision 0001](docs/decisions/0001-minimum-macos-version.md).
 
 ## Current App Foundation
 
-M00 establishes the first launchable app foundation:
+M00 establishes the first launchable app foundation, and M01.5 moves the app from a SwiftPM app package to a native Xcode project:
 
-- SwiftPM executable product: `LoomClone`
-- SwiftPM core target for testable foundation models: `LoomCloneCore`
+- Xcode app target: `LoomClone`
+- Xcode static library target for testable foundation models: `LoomCloneCore`
+- Xcode unit test target: `LoomCloneCoreTests`
 - SwiftUI app entry point
 - AppKit application delegate for menubar-style lifecycle behavior
 - menubar-first app surface using `MenuBarExtra`
-- placeholder app icon generation for the local app bundle
+- checked-in placeholder app icon asset catalog
 - project-local build and run script: `script/build_and_run.sh`
 - Codex Run action: `.codex/environments/environment.toml`
 - GitHub Actions CI/CD workflows documented in [CI/CD](docs/ci-cd.md)
 - initial source folders documented in [Project Structure](docs/project-structure.md)
 
-The build script stages a local `.app` bundle in `dist/` and launches that bundle so app metadata, icon, and `LSUIElement` menubar behavior are applied.
+The build script builds `LoomClone.xcodeproj`, stages a local `.app` bundle in `dist/`, and launches that bundle so app metadata, icon, and `LSUIElement` menubar behavior are applied.
 
-Open the project in Xcode by opening `Package.swift` inside this repo, or run:
+Open the project in Xcode by opening `LoomClone.xcodeproj` inside this repo, or run:
 
 ```sh
-xed Package.swift
+xed LoomClone.xcodeproj
 ```
 
-Do not open the parent `New project` folder in Xcode. That only opens the workspace folder around the repo and does not load the Swift package correctly.
+Do not open the parent `New project` folder in Xcode. That only opens the workspace folder around the repo and does not load the app project correctly.
 
 ## Privacy Posture
 
@@ -265,6 +266,24 @@ Acceptance criteria:
 - The app launches without a dock-first workflow.
 - The user can control the recording state from the menubar.
 - The user can see whether the app is idle, recording, or paused.
+
+### Milestone 1.5: Native Xcode Project
+
+Goal: make the project open and build like a normal macOS Xcode app project.
+
+Issues:
+
+- Add a checked-in `LoomClone.xcodeproj`.
+- Move app metadata, minimum macOS version, menubar `LSUIElement`, and app icon handling into Xcode project settings and resources.
+- Keep `LoomCloneCore` testable from a dedicated unit test target.
+- Update local run scripts and CI to use `xcodebuild -project LoomClone.xcodeproj`.
+- Remove the SwiftPM package entry point to avoid opening the wrong project shape in Xcode.
+
+Acceptance criteria:
+
+- Opening `LoomClone.xcodeproj` in Xcode shows the app, core, and test targets.
+- Debug, Release, test, analyze, and package flows work through `xcodebuild`.
+- The app remains macOS 15.0, Apple Silicon arm64 only.
 
 ### Milestone 2: Screen Recording Core
 

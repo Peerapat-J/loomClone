@@ -1,0 +1,563 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A10000000000000000000001 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000001 /* AppDelegate.swift */; };
+		A10000000000000000000002 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000002 /* AppState.swift */; };
+		A10000000000000000000003 /* FloatingControlPanelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000003 /* FloatingControlPanelController.swift */; };
+		A10000000000000000000004 /* LoomCloneApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000004 /* LoomCloneApp.swift */; };
+		A10000000000000000000005 /* RecordingTimerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000005 /* RecordingTimerModel.swift */; };
+		A10000000000000000000006 /* FloatingControlBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000006 /* FloatingControlBarView.swift */; };
+		A10000000000000000000007 /* MenuBarContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000007 /* MenuBarContentView.swift */; };
+		A10000000000000000000008 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000008 /* SettingsView.swift */; };
+		A10000000000000000000009 /* SettingsWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000009 /* SettingsWindowController.swift */; };
+		A10000000000000000000010 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000010 /* Assets.xcassets */; };
+		A10000000000000000000011 /* AppIconPlaceholder.svg in Resources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000011 /* AppIconPlaceholder.svg */; };
+		A10000000000000000000012 /* MenuBarIconTemplate.svg in Resources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000012 /* MenuBarIconTemplate.svg */; };
+		A10000000000000000000013 /* libLoomCloneCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A20000000000000000000030 /* libLoomCloneCore.a */; };
+		A10000000000000000000014 /* libLoomCloneCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A20000000000000000000030 /* libLoomCloneCore.a */; };
+		A10000000000000000000020 /* AppConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000020 /* AppConfiguration.swift */; };
+		A10000000000000000000021 /* CameraSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000021 /* CameraSettings.swift */; };
+		A10000000000000000000022 /* ExportSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000022 /* ExportSettings.swift */; };
+		A10000000000000000000023 /* MicrophoneSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000023 /* MicrophoneSettings.swift */; };
+		A10000000000000000000024 /* OverlaySettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000024 /* OverlaySettings.swift */; };
+		A10000000000000000000025 /* PermissionModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000025 /* PermissionModels.swift */; };
+		A10000000000000000000026 /* RecordingCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000026 /* RecordingCommand.swift */; };
+		A10000000000000000000027 /* RecordingDuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000027 /* RecordingDuration.swift */; };
+		A10000000000000000000028 /* RecordingState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000028 /* RecordingState.swift */; };
+		A10000000000000000000029 /* SaveLocationSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000029 /* SaveLocationSettings.swift */; };
+		A10000000000000000000040 /* CoreModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000040 /* CoreModelTests.swift */; };
+		A10000000000000000000041 /* PublicAPISmokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000041 /* PublicAPISmokeTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		A30000000000000000000001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A90000000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A40000000000000000000200;
+			remoteInfo = LoomCloneCore;
+		};
+		A30000000000000000000002 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A90000000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A40000000000000000000200;
+			remoteInfo = LoomCloneCore;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		A20000000000000000000001 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		A20000000000000000000002 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		A20000000000000000000003 /* FloatingControlPanelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingControlPanelController.swift; sourceTree = "<group>"; };
+		A20000000000000000000004 /* LoomCloneApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoomCloneApp.swift; sourceTree = "<group>"; };
+		A20000000000000000000005 /* RecordingTimerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingTimerModel.swift; sourceTree = "<group>"; };
+		A20000000000000000000006 /* FloatingControlBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingControlBarView.swift; sourceTree = "<group>"; };
+		A20000000000000000000007 /* MenuBarContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarContentView.swift; sourceTree = "<group>"; };
+		A20000000000000000000008 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		A20000000000000000000009 /* SettingsWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsWindowController.swift; sourceTree = "<group>"; };
+		A20000000000000000000010 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A20000000000000000000011 /* AppIconPlaceholder.svg */ = {isa = PBXFileReference; lastKnownFileType = image.svg; path = AppIconPlaceholder.svg; sourceTree = "<group>"; };
+		A20000000000000000000012 /* MenuBarIconTemplate.svg */ = {isa = PBXFileReference; lastKnownFileType = image.svg; path = MenuBarIconTemplate.svg; sourceTree = "<group>"; };
+		A20000000000000000000013 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A20000000000000000000020 /* AppConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfiguration.swift; sourceTree = "<group>"; };
+		A20000000000000000000021 /* CameraSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraSettings.swift; sourceTree = "<group>"; };
+		A20000000000000000000022 /* ExportSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportSettings.swift; sourceTree = "<group>"; };
+		A20000000000000000000023 /* MicrophoneSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicrophoneSettings.swift; sourceTree = "<group>"; };
+		A20000000000000000000024 /* OverlaySettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlaySettings.swift; sourceTree = "<group>"; };
+		A20000000000000000000025 /* PermissionModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionModels.swift; sourceTree = "<group>"; };
+		A20000000000000000000026 /* RecordingCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingCommand.swift; sourceTree = "<group>"; };
+		A20000000000000000000027 /* RecordingDuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingDuration.swift; sourceTree = "<group>"; };
+		A20000000000000000000028 /* RecordingState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingState.swift; sourceTree = "<group>"; };
+		A20000000000000000000029 /* SaveLocationSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveLocationSettings.swift; sourceTree = "<group>"; };
+		A20000000000000000000030 /* libLoomCloneCore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libLoomCloneCore.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		A20000000000000000000031 /* LoomClone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LoomClone.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A20000000000000000000032 /* LoomCloneCoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LoomCloneCoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A20000000000000000000040 /* CoreModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreModelTests.swift; sourceTree = "<group>"; };
+		A20000000000000000000041 /* PublicAPISmokeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicAPISmokeTests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A50000000000000000000102 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10000000000000000000013 /* libLoomCloneCore.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A50000000000000000000202 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A50000000000000000000302 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10000000000000000000014 /* libLoomCloneCore.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A60000000000000000000001 = {
+			isa = PBXGroup;
+			children = (
+				A60000000000000000000002 /* Sources */,
+				A60000000000000000000008 /* Tests */,
+				A60000000000000000000009 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A60000000000000000000002 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				A60000000000000000000003 /* LoomClone */,
+				A60000000000000000000007 /* LoomCloneCore */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		A60000000000000000000003 /* LoomClone */ = {
+			isa = PBXGroup;
+			children = (
+				A60000000000000000000004 /* App */,
+				A60000000000000000000005 /* MenuBar */,
+				A60000000000000000000006 /* Settings */,
+				A60000000000000000000010 /* Resources */,
+			);
+			path = LoomClone;
+			sourceTree = "<group>";
+		};
+		A60000000000000000000004 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000001 /* AppDelegate.swift */,
+				A20000000000000000000002 /* AppState.swift */,
+				A20000000000000000000003 /* FloatingControlPanelController.swift */,
+				A20000000000000000000004 /* LoomCloneApp.swift */,
+				A20000000000000000000005 /* RecordingTimerModel.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		A60000000000000000000005 /* MenuBar */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000006 /* FloatingControlBarView.swift */,
+				A20000000000000000000007 /* MenuBarContentView.swift */,
+			);
+			path = MenuBar;
+			sourceTree = "<group>";
+		};
+		A60000000000000000000006 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000008 /* SettingsView.swift */,
+				A20000000000000000000009 /* SettingsWindowController.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		A60000000000000000000007 /* LoomCloneCore */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000020 /* AppConfiguration.swift */,
+				A20000000000000000000021 /* CameraSettings.swift */,
+				A20000000000000000000022 /* ExportSettings.swift */,
+				A20000000000000000000023 /* MicrophoneSettings.swift */,
+				A20000000000000000000024 /* OverlaySettings.swift */,
+				A20000000000000000000025 /* PermissionModels.swift */,
+				A20000000000000000000026 /* RecordingCommand.swift */,
+				A20000000000000000000027 /* RecordingDuration.swift */,
+				A20000000000000000000028 /* RecordingState.swift */,
+				A20000000000000000000029 /* SaveLocationSettings.swift */,
+			);
+			path = LoomCloneCore;
+			sourceTree = "<group>";
+		};
+		A60000000000000000000008 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				A60000000000000000000011 /* LoomCloneCoreTests */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		A60000000000000000000009 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000031 /* LoomClone.app */,
+				A20000000000000000000030 /* libLoomCloneCore.a */,
+				A20000000000000000000032 /* LoomCloneCoreTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A60000000000000000000010 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000010 /* Assets.xcassets */,
+				A20000000000000000000011 /* AppIconPlaceholder.svg */,
+				A20000000000000000000013 /* Info.plist */,
+				A20000000000000000000012 /* MenuBarIconTemplate.svg */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		A60000000000000000000011 /* LoomCloneCoreTests */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000040 /* CoreModelTests.swift */,
+				A20000000000000000000041 /* PublicAPISmokeTests.swift */,
+			);
+			path = LoomCloneCoreTests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A40000000000000000000100 /* LoomClone */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A70000000000000000000100 /* Build configuration list for PBXNativeTarget "LoomClone" */;
+			buildPhases = (
+				A50000000000000000000101 /* Sources */,
+				A50000000000000000000102 /* Frameworks */,
+				A50000000000000000000103 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A80000000000000000000001 /* PBXTargetDependency */,
+			);
+			name = LoomClone;
+			productName = LoomClone;
+			productReference = A20000000000000000000031 /* LoomClone.app */;
+			productType = "com.apple.product-type.application";
+		};
+		A40000000000000000000200 /* LoomCloneCore */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A70000000000000000000200 /* Build configuration list for PBXNativeTarget "LoomCloneCore" */;
+			buildPhases = (
+				A50000000000000000000201 /* Sources */,
+				A50000000000000000000202 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = LoomCloneCore;
+			productName = LoomCloneCore;
+			productReference = A20000000000000000000030 /* libLoomCloneCore.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		A40000000000000000000300 /* LoomCloneCoreTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A70000000000000000000300 /* Build configuration list for PBXNativeTarget "LoomCloneCoreTests" */;
+			buildPhases = (
+				A50000000000000000000301 /* Sources */,
+				A50000000000000000000302 /* Frameworks */,
+				A50000000000000000000303 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A80000000000000000000002 /* PBXTargetDependency */,
+			);
+			name = LoomCloneCoreTests;
+			productName = LoomCloneCoreTests;
+			productReference = A20000000000000000000032 /* LoomCloneCoreTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A90000000000000000000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2650;
+				LastUpgradeCheck = 2650;
+				TargetAttributes = {
+					A40000000000000000000100 = {
+						CreatedOnToolsVersion = 26.5;
+					};
+					A40000000000000000000200 = {
+						CreatedOnToolsVersion = 26.5;
+					};
+					A40000000000000000000300 = {
+						CreatedOnToolsVersion = 26.5;
+						TestTargetID = A40000000000000000000200;
+					};
+				};
+			};
+			buildConfigurationList = A70000000000000000000001 /* Build configuration list for PBXProject "LoomClone" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A60000000000000000000001;
+			productRefGroup = A60000000000000000000009 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A40000000000000000000100 /* LoomClone */,
+				A40000000000000000000200 /* LoomCloneCore */,
+				A40000000000000000000300 /* LoomCloneCoreTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A50000000000000000000103 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10000000000000000000010 /* Assets.xcassets in Resources */,
+				A10000000000000000000011 /* AppIconPlaceholder.svg in Resources */,
+				A10000000000000000000012 /* MenuBarIconTemplate.svg in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A50000000000000000000303 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A50000000000000000000101 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10000000000000000000001 /* AppDelegate.swift in Sources */,
+				A10000000000000000000002 /* AppState.swift in Sources */,
+				A10000000000000000000003 /* FloatingControlPanelController.swift in Sources */,
+				A10000000000000000000004 /* LoomCloneApp.swift in Sources */,
+				A10000000000000000000005 /* RecordingTimerModel.swift in Sources */,
+				A10000000000000000000006 /* FloatingControlBarView.swift in Sources */,
+				A10000000000000000000007 /* MenuBarContentView.swift in Sources */,
+				A10000000000000000000008 /* SettingsView.swift in Sources */,
+				A10000000000000000000009 /* SettingsWindowController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A50000000000000000000201 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10000000000000000000020 /* AppConfiguration.swift in Sources */,
+				A10000000000000000000021 /* CameraSettings.swift in Sources */,
+				A10000000000000000000022 /* ExportSettings.swift in Sources */,
+				A10000000000000000000023 /* MicrophoneSettings.swift in Sources */,
+				A10000000000000000000024 /* OverlaySettings.swift in Sources */,
+				A10000000000000000000025 /* PermissionModels.swift in Sources */,
+				A10000000000000000000026 /* RecordingCommand.swift in Sources */,
+				A10000000000000000000027 /* RecordingDuration.swift in Sources */,
+				A10000000000000000000028 /* RecordingState.swift in Sources */,
+				A10000000000000000000029 /* SaveLocationSettings.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A50000000000000000000301 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10000000000000000000040 /* CoreModelTests.swift in Sources */,
+				A10000000000000000000041 /* PublicAPISmokeTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A80000000000000000000001 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A40000000000000000000200 /* LoomCloneCore */;
+			targetProxy = A30000000000000000000001 /* PBXContainerItemProxy */;
+		};
+		A80000000000000000000002 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A40000000000000000000200 /* LoomCloneCore */;
+			targetProxy = A30000000000000000000002 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		A70000000000000000000002 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = arm64;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		A70000000000000000000003 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = arm64;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 6.0;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		A70000000000000000000101 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = Sources/LoomClone/Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = dev.peerapat.loomclone;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		A70000000000000000000102 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = Sources/LoomClone/Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = dev.peerapat.loomclone;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		A70000000000000000000201 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEFINES_MODULE = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.peerapat.loomclone.core;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		A70000000000000000000202 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEFINES_MODULE = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.peerapat.loomclone.core;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		A70000000000000000000301 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @loader_path/../Frameworks @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = dev.peerapat.loomclone.coretests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = LoomCloneCore;
+			};
+			name = Debug;
+		};
+		A70000000000000000000302 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @loader_path/../Frameworks @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = dev.peerapat.loomclone.coretests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = LoomCloneCore;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A70000000000000000000001 /* Build configuration list for PBXProject "LoomClone" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A70000000000000000000002 /* Debug */,
+				A70000000000000000000003 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A70000000000000000000100 /* Build configuration list for PBXNativeTarget "LoomClone" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A70000000000000000000101 /* Debug */,
+				A70000000000000000000102 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A70000000000000000000200 /* Build configuration list for PBXNativeTarget "LoomCloneCore" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A70000000000000000000201 /* Debug */,
+				A70000000000000000000202 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A70000000000000000000300 /* Build configuration list for PBXNativeTarget "LoomCloneCoreTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A70000000000000000000301 /* Debug */,
+				A70000000000000000000302 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A90000000000000000000001 /* Project object */;
+}

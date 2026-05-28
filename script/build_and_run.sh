@@ -5,69 +5,66 @@ MODE="${1:-run}"
 APP_NAME="LoomClone"
 BUNDLE_ID="dev.peerapat.loomclone"
 MIN_SYSTEM_VERSION="15.0"
-SWIFT_BUILD_FLAGS=(--arch arm64)
+CONFIGURATION="${CONFIGURATION:-Debug}"
+PROJECT_NAME="LoomClone.xcodeproj"
+SCHEME="LoomClone"
+DESTINATION="platform=macOS,arch=arm64"
 export MACOSX_DEPLOYMENT_TARGET="${MACOSX_DEPLOYMENT_TARGET:-$MIN_SYSTEM_VERSION}"
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+PROJECT_PATH="$ROOT_DIR/$PROJECT_NAME"
+DERIVED_DATA_DIR="${DERIVED_DATA_DIR:-$ROOT_DIR/.derivedData}"
+BUILD_PRODUCTS_DIR="$DERIVED_DATA_DIR/Build/Products/$CONFIGURATION"
+BUILT_APP_BUNDLE="$BUILD_PRODUCTS_DIR/$APP_NAME.app"
 DIST_DIR="$ROOT_DIR/dist"
 APP_BUNDLE="$DIST_DIR/$APP_NAME.app"
-APP_CONTENTS="$APP_BUNDLE/Contents"
-APP_MACOS="$APP_CONTENTS/MacOS"
-APP_RESOURCES="$APP_CONTENTS/Resources"
-APP_BINARY="$APP_MACOS/$APP_NAME"
-INFO_PLIST="$APP_CONTENTS/Info.plist"
-ICONSET_DIR="$APP_RESOURCES/AppIcon.iconset"
-ICON_FILE="$APP_RESOURCES/AppIcon.icns"
+APP_BINARY="$APP_BUNDLE/Contents/MacOS/$APP_NAME"
+INFO_PLIST="$APP_BUNDLE/Contents/Info.plist"
 
 stop_existing_app() {
   /usr/bin/pkill -x "$APP_NAME" >/dev/null 2>&1 || true
 }
 
-build_package() {
-  swift build "${SWIFT_BUILD_FLAGS[@]}"
+build_project() {
+  xcodebuild \
+    -project "$PROJECT_PATH" \
+    -scheme "$SCHEME" \
+    -configuration "$CONFIGURATION" \
+    -destination "$DESTINATION" \
+    -derivedDataPath "$DERIVED_DATA_DIR" \
+    ARCHS=arm64 \
+    ONLY_ACTIVE_ARCH=YES \
+    MACOSX_DEPLOYMENT_TARGET="$MIN_SYSTEM_VERSION" \
+    CODE_SIGNING_ALLOWED="${CODE_SIGNING_ALLOWED:-NO}" \
+    build
 }
 
 stage_app_bundle() {
-  local build_dir
-  build_dir="$(swift build "${SWIFT_BUILD_FLAGS[@]}" --show-bin-path)"
-
   /bin/rm -rf "$APP_BUNDLE"
-  /bin/mkdir -p "$APP_MACOS" "$APP_RESOURCES"
-
-  /bin/cp "$build_dir/$APP_NAME" "$APP_BINARY"
-  /bin/chmod +x "$APP_BINARY"
-  verify_apple_silicon_binary
-
-  if compgen -G "$build_dir/*.bundle" >/dev/null; then
-    /bin/cp -R "$build_dir"/*.bundle "$APP_RESOURCES/"
-  fi
-
-  /usr/bin/swift "$ROOT_DIR/script/generate_app_icon.swift" "$ICONSET_DIR"
-  /usr/bin/iconutil -c icns "$ICONSET_DIR" -o "$ICON_FILE"
-
-  /usr/bin/plutil -create xml1 "$INFO_PLIST"
-  /usr/bin/plutil -insert CFBundleExecutable -string "$APP_NAME" "$INFO_PLIST"
-  /usr/bin/plutil -insert CFBundleIdentifier -string "$BUNDLE_ID" "$INFO_PLIST"
-  /usr/bin/plutil -insert CFBundleName -string "$APP_NAME" "$INFO_PLIST"
-  /usr/bin/plutil -insert CFBundleDisplayName -string "$APP_NAME" "$INFO_PLIST"
-  /usr/bin/plutil -insert CFBundlePackageType -string APPL "$INFO_PLIST"
-  /usr/bin/plutil -insert CFBundleShortVersionString -string "0.1.0" "$INFO_PLIST"
-  /usr/bin/plutil -insert CFBundleVersion -string "1" "$INFO_PLIST"
-  /usr/bin/plutil -insert CFBundleIconFile -string AppIcon "$INFO_PLIST"
-  /usr/bin/plutil -insert LSApplicationCategoryType -string "public.app-category.video" "$INFO_PLIST"
-  /usr/bin/plutil -insert LSMinimumSystemVersion -string "$MIN_SYSTEM_VERSION" "$INFO_PLIST"
-  /usr/bin/plutil -insert LSUIElement -bool YES "$INFO_PLIST"
-  /usr/bin/plutil -insert NSHighResolutionCapable -bool YES "$INFO_PLIST"
-  /usr/bin/plutil -insert NSPrincipalClass -string NSApplication "$INFO_PLIST"
-  /usr/bin/plutil -insert NSCameraUsageDescription -string "LoomClone uses the camera only when the webcam overlay is enabled." "$INFO_PLIST"
-  /usr/bin/plutil -insert NSMicrophoneUsageDescription -string "LoomClone uses the microphone only when microphone recording is enabled." "$INFO_PLIST"
+  /bin/mkdir -p "$DIST_DIR"
+  /usr/bin/ditto "$BUILT_APP_BUNDLE" "$APP_BUNDLE"
+  verify_packaged_app
 }
 
-verify_apple_silicon_binary() {
+verify_packaged_app() {
   local archs
   archs="$(/usr/bin/lipo -archs "$APP_BINARY")"
   if [[ "$archs" != "arm64" ]]; then
     echo "expected $APP_NAME to be arm64 only, got: $archs" >&2
+    exit 1
+  fi
+
+  local minimum_system_version
+  minimum_system_version="$(/usr/bin/plutil -extract LSMinimumSystemVersion raw -o - "$INFO_PLIST")"
+  if [[ "$minimum_system_version" != "$MIN_SYSTEM_VERSION" ]]; then
+    echo "expected LSMinimumSystemVersion $MIN_SYSTEM_VERSION, got: $minimum_system_version" >&2
+    exit 1
+  fi
+
+  local bundle_identifier
+  bundle_identifier="$(/usr/bin/plutil -extract CFBundleIdentifier raw -o - "$INFO_PLIST")"
+  if [[ "$bundle_identifier" != "$BUNDLE_ID" ]]; then
+    echo "expected CFBundleIdentifier $BUNDLE_ID, got: $bundle_identifier" >&2
     exit 1
   fi
 }
@@ -81,7 +78,7 @@ usage() {
 }
 
 stop_existing_app
-build_package
+build_project
 stage_app_bundle
 
 case "$MODE" in

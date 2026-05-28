@@ -40,35 +40,72 @@ jobs:
           swift --version
           xcodebuild -version
 
-      - name: Validate package graph
-        run: swift package describe >/tmp/loomclone-package.json
-
       - name: Check shell scripts
         run: bash -n script/build_and_run.sh
 
       - name: Swift format lint
         run: |
           if command -v swift-format >/dev/null 2>&1; then
-            swift-format lint --recursive Package.swift Sources Tests
+            swift-format lint --recursive Sources Tests
           else
             echo "swift-format is not installed on this runner; skipping lint."
           fi
 
-      - name: Unit tests
-        run: swift test --arch arm64
-
-      - name: SwiftPM build
-        run: swift build --arch arm64
-
-      - name: Xcode package build
+      - name: Xcode unit tests
         run: |
           xcodebuild \
+            -project LoomClone.xcodeproj \
             -scheme LoomClone \
+            -configuration Debug \
             -destination 'platform=macOS,arch=arm64' \
+            -derivedDataPath /tmp/loomclone-test-derived \
             ARCHS=arm64 \
-            MACOSX_DEPLOYMENT_TARGET=15.0 \
             ONLY_ACTIVE_ARCH=YES \
+            MACOSX_DEPLOYMENT_TARGET=15.0 \
+            CODE_SIGNING_ALLOWED=NO \
+            test
+
+      - name: Xcode Debug build
+        run: |
+          xcodebuild \
+            -project LoomClone.xcodeproj \
+            -scheme LoomClone \
+            -configuration Debug \
+            -destination 'platform=macOS,arch=arm64' \
+            -derivedDataPath /tmp/loomclone-debug-derived \
+            ARCHS=arm64 \
+            ONLY_ACTIVE_ARCH=YES \
+            MACOSX_DEPLOYMENT_TARGET=15.0 \
+            CODE_SIGNING_ALLOWED=NO \
             build
+
+      - name: Xcode Release build
+        run: |
+          xcodebuild \
+            -project LoomClone.xcodeproj \
+            -scheme LoomClone \
+            -configuration Release \
+            -destination 'platform=macOS,arch=arm64' \
+            -derivedDataPath /tmp/loomclone-release-derived \
+            ARCHS=arm64 \
+            ONLY_ACTIVE_ARCH=YES \
+            MACOSX_DEPLOYMENT_TARGET=15.0 \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+
+      - name: Xcode analyze
+        run: |
+          xcodebuild \
+            -project LoomClone.xcodeproj \
+            -scheme LoomClone \
+            -configuration Debug \
+            -destination 'platform=macOS,arch=arm64' \
+            -derivedDataPath /tmp/loomclone-analyze-derived \
+            ARCHS=arm64 \
+            ONLY_ACTIVE_ARCH=YES \
+            MACOSX_DEPLOYMENT_TARGET=15.0 \
+            CODE_SIGNING_ALLOWED=NO \
+            analyze
 
       - name: Package app bundle
         run: ./script/build_and_run.sh --package
@@ -93,11 +130,11 @@ jobs:
             echo ""
             echo "### Checks"
             echo ""
-            echo "- Package graph validation"
             echo "- Shell script syntax"
             echo "- Swift format lint when swift-format is installed"
-            echo "- Unit tests: swift test --arch arm64"
-            echo "- SwiftPM build: swift build --arch arm64"
-            echo "- Xcode package build for macOS arm64"
+            echo "- Xcode unit tests for macOS arm64"
+            echo "- Xcode Debug build for macOS arm64"
+            echo "- Xcode Release build for macOS arm64"
+            echo "- Xcode analyze for macOS arm64"
             echo "- App bundle packaging and metadata verification"
           } >> "$GITHUB_STEP_SUMMARY"

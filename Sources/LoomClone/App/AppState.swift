@@ -127,7 +127,7 @@ final class AppState: ObservableObject {
     }
 
     func openLastRecording() {
-        guard let lastRecordingURL else {
+        guard isCommandEnabled(.openLastRecording), let lastRecordingURL else {
             return
         }
 

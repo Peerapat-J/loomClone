@@ -27,33 +27,49 @@ public enum RecordingCommand: String, CaseIterable, Identifiable {
     public func isEnabled(in state: RecordingState, hasLastRecording: Bool = false) -> Bool {
         switch self {
         case .start:
-            state == .idle
+            state.canStartRecording
         case .pause:
-            state == .recording
+            state.canPauseRecording
         case .resume:
-            state == .paused
+            state.canResumeRecording
         case .stop:
-            state == .recording || state == .paused
+            state.canStopRecording
         case .openLastRecording:
-            state == .idle && hasLastRecording
+            state.canOpenLastRecording(hasLastRecording: hasLastRecording)
         }
     }
 }
 
 public extension RecordingState {
-    var canStartRecording: Bool {
+    var isIdle: Bool {
         self == .idle
     }
 
-    var canPauseRecording: Bool {
+    var isRecording: Bool {
         self == .recording
     }
 
-    var canResumeRecording: Bool {
+    var isPaused: Bool {
         self == .paused
     }
 
+    var canStartRecording: Bool {
+        isIdle
+    }
+
+    var canPauseRecording: Bool {
+        isRecording
+    }
+
+    var canResumeRecording: Bool {
+        isPaused
+    }
+
     var canStopRecording: Bool {
-        self == .recording || self == .paused
+        isRecording || isPaused
+    }
+
+    func canOpenLastRecording(hasLastRecording: Bool) -> Bool {
+        isIdle && hasLastRecording
     }
 }

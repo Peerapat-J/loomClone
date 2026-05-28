@@ -50,3 +50,24 @@ jobs:
           name: LoomClone-macos15-arm64
           path: dist/LoomClone-macos15-arm64.zip
           retention-days: 14
+
+      - name: Write release preview summary
+        if: always()
+        run: |
+          {
+            echo "## Release Preview Summary"
+            echo ""
+            echo "- Workflow: $GITHUB_WORKFLOW"
+            echo "- Ref: $GITHUB_REF_NAME"
+            echo "- Commit: $GITHUB_SHA"
+            echo "- Runner: macos-15"
+            echo "- Target: macOS 15.0, arm64"
+            echo "- Artifact: LoomClone-macos15-arm64"
+            echo "- Retention: 14 days"
+            echo ""
+            echo "### Checks"
+            echo ""
+            echo "- Unit tests: swift test --arch arm64"
+            echo "- App bundle packaging"
+            echo "- App binary architecture and minimum macOS verification"
+          } >> "$GITHUB_STEP_SUMMARY"

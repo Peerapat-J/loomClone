@@ -13,6 +13,29 @@ struct MenuBarContentView: View {
 
         Divider()
 
+        Label(
+            appState.screenRecordingPermissionStatusText,
+            systemImage: appState.screenRecordingPermissionSystemImage
+        )
+
+        if appState.needsScreenRecordingPermissionAction {
+            Text(appState.screenRecordingPermissionDetailText)
+
+            Button {
+                appState.requestScreenRecordingPermission()
+            } label: {
+                Label("Allow Screen Recording...", systemImage: "lock.open")
+            }
+
+            Button {
+                appState.openScreenRecordingSettings()
+            } label: {
+                Label("Open Screen Recording Settings", systemImage: "gearshape")
+            }
+        }
+
+        Divider()
+
         Button {
             appState.startRecording()
         } label: {

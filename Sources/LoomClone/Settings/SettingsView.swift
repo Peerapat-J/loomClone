@@ -30,6 +30,21 @@ struct SettingsView: View {
                 }
             }
 
+            Section("Permissions") {
+                LabeledContent("Screen Recording", value: appState.screenRecordingPermissionStatusText)
+                Text(appState.screenRecordingPermissionDetailText)
+
+                HStack {
+                    Button("Check Again") {
+                        appState.refreshScreenRecordingPermission()
+                    }
+
+                    Button("Open Screen Recording Settings") {
+                        appState.openScreenRecordingSettings()
+                    }
+                }
+            }
+
             Section("Recorder") {
                 Toggle("Microphone", isOn: .constant(false))
                     .disabled(true)

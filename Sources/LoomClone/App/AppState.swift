@@ -1,11 +1,13 @@
 import AppKit
 import Combine
+import CoreGraphics
 import Foundation
 import LoomCloneCore
 
 @MainActor
 final class AppState: ObservableObject {
     @Published private(set) var recordingState: RecordingState = .idle
+    @Published private(set) var screenRecordingPermissionState: PermissionState = .unknown
     @Published private(set) var saveLocationSettings: SaveLocationSettings
     @Published private(set) var saveLocationAvailability: SaveLocationAvailability = .available
     @Published private(set) var lastRecordingURL: URL?
@@ -18,19 +20,27 @@ final class AppState: ObservableObject {
     private let saveLocationStore: SaveLocationPreferenceStore
     private let fileManager: FileManager
     private let floatingControlPanelController: FloatingControlPanelController
+    private let userDefaults: UserDefaults
+    private let screenRecordingSettingsURL = URL(
+        string: "x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture"
+    )
+    private let hasRequestedScreenRecordingAccessKey = "hasRequestedScreenRecordingAccess"
 
     init(
         saveLocationStore: SaveLocationPreferenceStore = SaveLocationPreferenceStore(),
         fileManager: FileManager = .default,
-        floatingControlPanelController: FloatingControlPanelController = FloatingControlPanelController()
+        floatingControlPanelController: FloatingControlPanelController = FloatingControlPanelController(),
+        userDefaults: UserDefaults = .standard
     ) {
         self.saveLocationStore = saveLocationStore
         self.fileManager = fileManager
         self.floatingControlPanelController = floatingControlPanelController
+        self.userDefaults = userDefaults
         self.saveLocationSettings = saveLocationStore.load()
 
         prepareDefaultSaveLocation()
         refreshSaveLocationAvailability()
+        refreshScreenRecordingPermission()
     }
 
     var shouldShowFloatingControlBar: Bool {
@@ -79,6 +89,49 @@ final class AppState: ObservableObject {
         }
     }
 
+    var screenRecordingPermissionStatusText: String {
+        switch screenRecordingPermissionState {
+        case .unknown:
+            "Screen Recording: Checking"
+        case .notDetermined:
+            "Screen Recording: Permission Needed"
+        case .granted:
+            "Screen Recording: Ready"
+        case .denied:
+            "Screen Recording: Disabled"
+        }
+    }
+
+    var screenRecordingPermissionDetailText: String {
+        switch screenRecordingPermissionState {
+        case .unknown:
+            "LoomClone is checking Screen Recording access."
+        case .notDetermined:
+            "Allow Screen Recording before starting a capture."
+        case .granted:
+            "Screen Recording permission is enabled."
+        case .denied:
+            "Enable LoomClone in System Settings > Privacy & Security > Screen Recording."
+        }
+    }
+
+    var screenRecordingPermissionSystemImage: String {
+        switch screenRecordingPermissionState {
+        case .unknown:
+            "questionmark.circle"
+        case .notDetermined:
+            "lock"
+        case .granted:
+            "checkmark.shield"
+        case .denied:
+            "exclamationmark.triangle"
+        }
+    }
+
+    var needsScreenRecordingPermissionAction: Bool {
+        screenRecordingPermissionState != .granted
+    }
+
     var canOpenLastRecording: Bool {
         lastRecordingURL != nil
     }
@@ -89,6 +142,10 @@ final class AppState: ObservableObject {
 
     func startRecording() {
         guard isCommandEnabled(.start) else {
+            return
+        }
+
+        guard ensureScreenRecordingPermissionBeforeRecording() else {
             return
         }
 
@@ -134,6 +191,33 @@ final class AppState: ObservableObject {
         NSWorkspace.shared.open(lastRecordingURL)
     }
 
+    func refreshScreenRecordingPermission() {
+        if CGPreflightScreenCaptureAccess() {
+            screenRecordingPermissionState = .granted
+        } else if userDefaults.bool(forKey: hasRequestedScreenRecordingAccessKey) {
+            screenRecordingPermissionState = .denied
+        } else {
+            screenRecordingPermissionState = .notDetermined
+        }
+    }
+
+    func requestScreenRecordingPermission() {
+        guard screenRecordingPermissionState != .granted else {
+            return
+        }
+
+        userDefaults.set(true, forKey: hasRequestedScreenRecordingAccessKey)
+        screenRecordingPermissionState = CGRequestScreenCaptureAccess() ? .granted : .denied
+    }
+
+    func openScreenRecordingSettings() {
+        if let screenRecordingSettingsURL {
+            NSWorkspace.shared.open(screenRecordingSettingsURL)
+        } else {
+            NSWorkspace.shared.open(URL(fileURLWithPath: "/System/Applications/System Settings.app"))
+        }
+    }
+
     func showSettings() {
         SettingsWindowController.shared.show(appState: self)
     }
@@ -170,6 +254,45 @@ final class AppState: ObservableObject {
     private func setRecordingState(_ state: RecordingState) {
         recordingState = state
         floatingControlPanelController.update(for: self)
+    }
+
+    private func ensureScreenRecordingPermissionBeforeRecording() -> Bool {
+        refreshScreenRecordingPermission()
+        let initialState = screenRecordingPermissionState
+
+        if initialState == .granted {
+            return true
+        }
+
+        if initialState == .notDetermined {
+            requestScreenRecordingPermission()
+            return screenRecordingPermissionState == .granted
+        }
+
+        requestScreenRecordingPermission()
+        if screenRecordingPermissionState == .granted {
+            return true
+        }
+
+        showScreenRecordingPermissionAlert()
+        return false
+    }
+
+    private func showScreenRecordingPermissionAlert() {
+        let alert = NSAlert()
+        alert.alertStyle = .warning
+        alert.messageText = "Screen Recording Permission Needed"
+        alert.informativeText = """
+        Enable Screen Recording for LoomClone in System Settings before starting a capture.
+
+        If macOS asks, quit and reopen LoomClone after enabling the permission.
+        """
+        alert.addButton(withTitle: "Open System Settings")
+        alert.addButton(withTitle: "Not Now")
+
+        if alert.runModal() == .alertFirstButtonReturn {
+            openScreenRecordingSettings()
+        }
     }
 
     private func prepareDefaultSaveLocation() {

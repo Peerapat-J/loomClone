@@ -258,13 +258,18 @@ final class AppState: ObservableObject {
 
     private func ensureScreenRecordingPermissionBeforeRecording() -> Bool {
         refreshScreenRecordingPermission()
+        let initialState = screenRecordingPermissionState
 
-        if screenRecordingPermissionState == .granted {
+        if initialState == .granted {
             return true
         }
 
-        requestScreenRecordingPermission()
+        if initialState == .notDetermined {
+            requestScreenRecordingPermission()
+            return screenRecordingPermissionState == .granted
+        }
 
+        requestScreenRecordingPermission()
         if screenRecordingPermissionState == .granted {
             return true
         }

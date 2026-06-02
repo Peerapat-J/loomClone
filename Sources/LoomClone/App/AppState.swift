@@ -8,6 +8,9 @@ import LoomCloneCore
 final class AppState: ObservableObject {
     @Published private(set) var recordingState: RecordingState = .idle
     @Published private(set) var screenRecordingPermissionState: PermissionState = .unknown
+    @Published private(set) var displayDetectionState: DisplayDetectionState = .unknown
+    @Published private(set) var availableDisplays: [DisplayCaptureTarget] = []
+    @Published private(set) var selectedDisplayID: DisplayCaptureTarget.ID?
     @Published private(set) var saveLocationSettings: SaveLocationSettings
     @Published private(set) var saveLocationAvailability: SaveLocationAvailability = .available
     @Published private(set) var lastRecordingURL: URL?
@@ -20,6 +23,7 @@ final class AppState: ObservableObject {
     private let saveLocationStore: SaveLocationPreferenceStore
     private let fileManager: FileManager
     private let floatingControlPanelController: FloatingControlPanelController
+    private let displayDetector: any DisplayCaptureDetecting
     private let userDefaults: UserDefaults
     private let screenRecordingSettingsURL = URL(
         string: "x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture"
@@ -30,17 +34,22 @@ final class AppState: ObservableObject {
         saveLocationStore: SaveLocationPreferenceStore = SaveLocationPreferenceStore(),
         fileManager: FileManager = .default,
         floatingControlPanelController: FloatingControlPanelController = FloatingControlPanelController(),
+        displayDetector: any DisplayCaptureDetecting = ScreenCaptureKitDisplayDetector(),
         userDefaults: UserDefaults = .standard
     ) {
         self.saveLocationStore = saveLocationStore
         self.fileManager = fileManager
         self.floatingControlPanelController = floatingControlPanelController
+        self.displayDetector = displayDetector
         self.userDefaults = userDefaults
         self.saveLocationSettings = saveLocationStore.load()
 
         prepareDefaultSaveLocation()
         refreshSaveLocationAvailability()
         refreshScreenRecordingPermission()
+        if screenRecordingPermissionState == .granted {
+            refreshAvailableDisplays()
+        }
     }
 
     var shouldShowFloatingControlBar: Bool {
@@ -132,6 +141,52 @@ final class AppState: ObservableObject {
         screenRecordingPermissionState != .granted
     }
 
+    var selectedDisplay: DisplayCaptureTarget? {
+        availableDisplays.first { $0.id == selectedDisplayID }
+    }
+
+    var hasAvailableDisplays: Bool {
+        !availableDisplays.isEmpty
+    }
+
+    var selectedDisplaySummary: String {
+        selectedDisplay?.menuTitle ?? "No display selected"
+    }
+
+    var displayDetectionStatusText: String {
+        displayDetectionState.displayName
+    }
+
+    var displayDetectionDetailText: String {
+        switch displayDetectionState {
+        case .unknown:
+            "Display detection has not run yet."
+        case .loading:
+            "LoomClone is checking available displays."
+        case .available:
+            selectedDisplaySummary
+        case .unavailable:
+            "No recordable displays were found."
+        case .failed(let message):
+            "Could not list displays: \(message)"
+        }
+    }
+
+    var displayDetectionSystemImage: String {
+        switch displayDetectionState {
+        case .unknown:
+            "display"
+        case .loading:
+            "arrow.clockwise"
+        case .available:
+            "display.and.arrow.down"
+        case .unavailable:
+            "display.trianglebadge.exclamationmark"
+        case .failed:
+            "exclamationmark.triangle"
+        }
+    }
+
     var canOpenLastRecording: Bool {
         lastRecordingURL != nil
     }
@@ -146,6 +201,10 @@ final class AppState: ObservableObject {
         }
 
         guard ensureScreenRecordingPermissionBeforeRecording() else {
+            return
+        }
+
+        guard ensureDisplaySelectedBeforeRecording() else {
             return
         }
 
@@ -208,6 +267,10 @@ final class AppState: ObservableObject {
 
         userDefaults.set(true, forKey: hasRequestedScreenRecordingAccessKey)
         screenRecordingPermissionState = CGRequestScreenCaptureAccess() ? .granted : .denied
+
+        if screenRecordingPermissionState == .granted {
+            refreshAvailableDisplays()
+        }
     }
 
     func openScreenRecordingSettings() {
@@ -220,6 +283,30 @@ final class AppState: ObservableObject {
 
     func showSettings() {
         SettingsWindowController.shared.show(appState: self)
+    }
+
+    func refreshAvailableDisplays() {
+        refreshScreenRecordingPermission()
+        guard screenRecordingPermissionState == .granted else {
+            availableDisplays = []
+            selectedDisplayID = nil
+            displayDetectionState = .failed("Screen Recording permission is required before listing displays.")
+            return
+        }
+
+        displayDetectionState = .loading
+
+        Task {
+            await loadAvailableDisplays()
+        }
+    }
+
+    func selectDisplay(id: DisplayCaptureTarget.ID) {
+        guard availableDisplays.contains(where: { $0.id == id }) else {
+            return
+        }
+
+        selectedDisplayID = id
     }
 
     func updateSaveLocation(to folderURL: URL) {
@@ -278,6 +365,36 @@ final class AppState: ObservableObject {
         return false
     }
 
+    private func ensureDisplaySelectedBeforeRecording() -> Bool {
+        if selectedDisplay != nil {
+            return true
+        }
+
+        refreshAvailableDisplays()
+        showDisplayUnavailableAlert()
+        return false
+    }
+
+    private func loadAvailableDisplays() async {
+        do {
+            let detectedDisplays = try await displayDetector.availableDisplays()
+            applyDetectedDisplays(detectedDisplays)
+        } catch {
+            availableDisplays = []
+            selectedDisplayID = nil
+            displayDetectionState = .failed(error.localizedDescription)
+        }
+    }
+
+    private func applyDetectedDisplays(_ detectedDisplays: [DisplayCaptureTarget]) {
+        availableDisplays = detectedDisplays
+        selectedDisplayID = DisplayCaptureTarget.preferredSelectionID(
+            in: detectedDisplays,
+            currentSelectionID: selectedDisplayID
+        )
+        displayDetectionState = detectedDisplays.isEmpty ? .unavailable : .available
+    }
+
     private func showScreenRecordingPermissionAlert() {
         let alert = NSAlert()
         alert.alertStyle = .warning
@@ -293,6 +410,19 @@ final class AppState: ObservableObject {
         if alert.runModal() == .alertFirstButtonReturn {
             openScreenRecordingSettings()
         }
+    }
+
+    private func showDisplayUnavailableAlert() {
+        let alert = NSAlert()
+        alert.alertStyle = .warning
+        alert.messageText = "No Display Selected"
+        alert.informativeText = """
+        LoomClone needs a display before recording can start.
+
+        Check connected displays and try refreshing the display list.
+        """
+        alert.addButton(withTitle: "OK")
+        alert.runModal()
     }
 
     private func prepareDefaultSaveLocation() {

@@ -36,12 +36,32 @@ struct MenuBarContentView: View {
 
         Divider()
 
+        Label(appState.displayDetectionStatusText, systemImage: appState.displayDetectionSystemImage)
+        Text(appState.displayDetectionDetailText)
+
+        if appState.hasAvailableDisplays {
+            Picker("Record Display", selection: selectedDisplayIDBinding) {
+                ForEach(appState.availableDisplays) { display in
+                    Text(display.menuTitle).tag(Optional(display.id))
+                }
+            }
+            .disabled(appState.recordingState != .idle)
+        }
+
+        Button {
+            appState.refreshAvailableDisplays()
+        } label: {
+            Label("Refresh Displays", systemImage: "arrow.clockwise")
+        }
+
+        Divider()
+
         Button {
             appState.startRecording()
         } label: {
             Label(RecordingCommand.start.displayName, systemImage: "record.circle")
         }
-        .disabled(!appState.isCommandEnabled(.start))
+        .disabled(!appState.isCommandEnabled(.start) || appState.selectedDisplay == nil)
 
         Button {
             appState.pauseRecording()
@@ -81,6 +101,16 @@ struct MenuBarContentView: View {
 
         Button("Quit") {
             NSApplication.shared.terminate(nil)
+        }
+    }
+
+    private var selectedDisplayIDBinding: Binding<DisplayCaptureTarget.ID?> {
+        Binding {
+            appState.selectedDisplayID
+        } set: { selectedID in
+            if let selectedID {
+                appState.selectDisplay(id: selectedID)
+            }
         }
     }
 }

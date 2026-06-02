@@ -53,6 +53,140 @@ final class CoreModelTests: XCTestCase {
         XCTAssertEqual(AppPermission.microphone.displayName, "Microphone")
     }
 
+    func testDisplayCaptureTargetUsesLocalizedOrStableFallbackNames() {
+        let namedDisplay = DisplayCaptureTarget(
+            id: 100,
+            name: "Studio Display",
+            width: 1_920,
+            height: 1_080,
+            frame: DisplayCaptureFrame(x: 0, y: 0, width: 1_920, height: 1_080)
+        )
+        let mainDisplay = DisplayCaptureTarget(
+            id: 200,
+            name: " ",
+            width: 3_456,
+            height: 2_234,
+            frame: DisplayCaptureFrame(x: 0, y: 0, width: 3_456, height: 2_234),
+            isMain: true
+        )
+        let externalDisplay = DisplayCaptureTarget(
+            id: 300,
+            width: 2_560,
+            height: 1_440,
+            frame: DisplayCaptureFrame(x: 3_456, y: 0, width: 2_560, height: 1_440)
+        )
+
+        XCTAssertEqual(namedDisplay.name, "Studio Display")
+        XCTAssertEqual(mainDisplay.name, "Main Display")
+        XCTAssertEqual(externalDisplay.name, "Display 300")
+    }
+
+    func testDisplayCaptureTargetFormatsPickerTextAndUsability() {
+        let display = DisplayCaptureTarget(
+            id: 100,
+            name: "Studio Display",
+            width: 1_920,
+            height: 1_080,
+            frame: DisplayCaptureFrame(x: 0, y: 0, width: 1_920, height: 1_080)
+        )
+        let invalidDisplay = DisplayCaptureTarget(
+            id: 101,
+            width: 0,
+            height: 1_080,
+            frame: DisplayCaptureFrame(x: 0, y: 0, width: 0, height: 1_080)
+        )
+
+        XCTAssertEqual(display.dimensionsText, "1920 x 1080")
+        XCTAssertEqual(display.menuTitle, "Studio Display (1920 x 1080)")
+        XCTAssertTrue(display.isUsable)
+        XCTAssertFalse(invalidDisplay.isUsable)
+    }
+
+    func testDisplayCaptureTargetSortingKeepsMainDisplayFirstAndDropsInvalidDisplays() {
+        let rightDisplay = DisplayCaptureTarget(
+            id: 300,
+            width: 2_560,
+            height: 1_440,
+            frame: DisplayCaptureFrame(x: 3_456, y: 0, width: 2_560, height: 1_440)
+        )
+        let invalidDisplay = DisplayCaptureTarget(
+            id: 400,
+            width: 0,
+            height: 1_440,
+            frame: DisplayCaptureFrame(x: -2_560, y: 0, width: 0, height: 1_440)
+        )
+        let mainDisplay = DisplayCaptureTarget(
+            id: 200,
+            width: 3_456,
+            height: 2_234,
+            frame: DisplayCaptureFrame(x: 0, y: 0, width: 3_456, height: 2_234),
+            isMain: true
+        )
+
+        let sortedDisplays = DisplayCaptureTarget.sortedForDisplayPicker([
+            rightDisplay,
+            invalidDisplay,
+            mainDisplay
+        ])
+
+        XCTAssertEqual(sortedDisplays.map(\.id), [200, 300])
+    }
+
+    func testDisplayCaptureTargetPreferredSelectionPreservesValidChoice() {
+        let displays = [
+            DisplayCaptureTarget(
+                id: 100,
+                width: 1_920,
+                height: 1_080,
+                frame: DisplayCaptureFrame(x: 0, y: 0, width: 1_920, height: 1_080),
+                isMain: true
+            ),
+            DisplayCaptureTarget(
+                id: 200,
+                width: 2_560,
+                height: 1_440,
+                frame: DisplayCaptureFrame(x: 1_920, y: 0, width: 2_560, height: 1_440)
+            )
+        ]
+
+        XCTAssertEqual(
+            DisplayCaptureTarget.preferredSelectionID(in: displays, currentSelectionID: 200),
+            200
+        )
+    }
+
+    func testDisplayCaptureTargetPreferredSelectionFallsBackToMainThenFirstThenNil() {
+        let secondaryDisplay = DisplayCaptureTarget(
+            id: 200,
+            width: 2_560,
+            height: 1_440,
+            frame: DisplayCaptureFrame(x: 1_920, y: 0, width: 2_560, height: 1_440)
+        )
+        let mainDisplay = DisplayCaptureTarget(
+            id: 100,
+            width: 1_920,
+            height: 1_080,
+            frame: DisplayCaptureFrame(x: 0, y: 0, width: 1_920, height: 1_080),
+            isMain: true
+        )
+
+        XCTAssertEqual(
+            DisplayCaptureTarget.preferredSelectionID(
+                in: [secondaryDisplay, mainDisplay],
+                currentSelectionID: 999
+            ),
+            100
+        )
+        XCTAssertEqual(
+            DisplayCaptureTarget.preferredSelectionID(
+                in: [secondaryDisplay],
+                currentSelectionID: nil
+            ),
+            200
+        )
+        XCTAssertNil(DisplayCaptureTarget.preferredSelectionID(in: [], currentSelectionID: 100))
+    }
+
     func testDefaultSettingsStayLocalMVPFriendly() {
         XCTAssertEqual(CameraSettings(), CameraSettings(isEnabled: false, prefersCircularOverlay: true))
         XCTAssertEqual(MicrophoneSettings(), MicrophoneSettings(isEnabled: false, selectedDeviceID: nil))

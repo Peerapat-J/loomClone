@@ -68,6 +68,7 @@ M00 establishes the first launchable app foundation, and M01.5 moves the app fro
 - Codex Run action: `.codex/environments/environment.toml`
 - GitHub Actions CI/CD workflows documented in [CI/CD](docs/ci-cd.md)
 - initial source folders documented in [Project Structure](docs/project-structure.md)
+- Screen Recording permission gate and display detection state for the M02 recorder path
 
 The build script builds `LoomClone.xcodeproj`, stages a local `.app` bundle in `dist/`, and launches that bundle so app metadata, icon, and `LSUIElement` menubar behavior are applied.
 

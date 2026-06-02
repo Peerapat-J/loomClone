@@ -45,6 +45,25 @@ struct SettingsView: View {
                 }
             }
 
+            Section("Display") {
+                LabeledContent("Status", value: appState.displayDetectionStatusText)
+                LabeledContent("Selected", value: appState.selectedDisplaySummary)
+                Text(appState.displayDetectionDetailText)
+
+                if appState.hasAvailableDisplays {
+                    Picker("Record Display", selection: selectedDisplayIDBinding) {
+                        ForEach(appState.availableDisplays) { display in
+                            Text(display.menuTitle).tag(Optional(display.id))
+                        }
+                    }
+                    .disabled(appState.recordingState != .idle)
+                }
+
+                Button("Refresh Displays") {
+                    appState.refreshAvailableDisplays()
+                }
+            }
+
             Section("Recorder") {
                 Toggle("Microphone", isOn: .constant(false))
                     .disabled(true)
@@ -78,6 +97,16 @@ struct SettingsView: View {
 
         if panel.runModal() == .OK, let folderURL = panel.url {
             appState.updateSaveLocation(to: folderURL)
+        }
+    }
+
+    private var selectedDisplayIDBinding: Binding<DisplayCaptureTarget.ID?> {
+        Binding {
+            appState.selectedDisplayID
+        } set: { selectedID in
+            if let selectedID {
+                appState.selectDisplay(id: selectedID)
+            }
         }
     }
 }

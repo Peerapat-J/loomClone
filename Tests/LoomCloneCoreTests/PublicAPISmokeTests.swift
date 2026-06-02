@@ -19,5 +19,14 @@ final class PublicAPISmokeTests: XCTestCase {
         _ = SaveLocationSettings()
         _ = SaveLocationSettings(customFolderPath: "/tmp")
         _ = SaveLocationPreferenceStore()
+        _ = DisplayCaptureFrame(x: 0, y: 0, width: 1_920, height: 1_080)
+        _ = DisplayCaptureTarget(
+            id: 1,
+            name: "Display",
+            width: 1_920,
+            height: 1_080,
+            frame: DisplayCaptureFrame(x: 0, y: 0, width: 1_920, height: 1_080),
+            isMain: true
+        )
     }
 }
